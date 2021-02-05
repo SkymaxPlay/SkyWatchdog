@@ -1,0 +1,6 @@
+# Project exclude paths
+/test-server/
+.idea
+/venv
+/dist
+/build

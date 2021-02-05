@@ -1,0 +1,1 @@
+pyinstaller -p /venv/Lib/site-packages -y --clean SkyWatchdog.spec

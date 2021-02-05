@@ -1,0 +1,92 @@
+{
+  "run-on-startup": true,
+  "checkPeriod": 5,
+  "mail": {
+    "server": "smtp.com",
+    "port": 465,
+    "ssl": true,
+    "user": "user@email.com",
+    "password": "pass",
+    "recipients": [
+      "observer@gmail.com"
+    ],
+    "templates": {
+      "on-startup": {
+        "subject": "SkyWatchdog został uruchomiony",
+        "content": [
+          "Data: {TIME}"
+        ]
+      },
+      "on-task-error": {
+        "subject": "{NAME} przestał poprawnie funkcjonować",
+        "content": [
+          "Task {NAME} nie spełnia warunków poprawngo działania.",
+          "Data: {TIME}",
+          "Tryb ratowania: {RESCUE-ENABLED}"
+        ]
+      },
+      "on-task-rescued": {
+        "subject": "{NAME} działa poprawnie!",
+        "content": [
+          "Task {NAME} działa już poprawnie.",
+          "Data: {TIME}"
+        ]
+      }
+    }
+  },
+  "notify": {
+    "on-startup": true
+  },
+  "tasks": [
+    {
+      "name": "Notatnik",
+      "checkType": "PROCESS",
+      "source": "notepad.exe",
+      "rescue-exec": [
+        "C:\\Windows\\system32\\notepad.exe"
+      ],
+      "notify": {
+        "on-error": true,
+        "on-rescued": true
+      }
+    },
+    {
+      "name": "json-endpoint",
+      "checkType": "ENDPOINT",
+      "source": "http://localhost:3000/jsonEndpoint",
+      "payload": {
+        "type": "JSON",
+        "steps": [
+          {
+            "type": "JSON_ARRAY",
+            "object": 1
+          },
+          {
+            "type": "JSON_OBJECT",
+            "object": "database-service"
+          }
+        ],
+        "expects": "green"
+      },
+      "rescue-exec": [],
+      "notify": {
+        "on-error": true,
+        "on-rescued": true
+      }
+    },
+    {
+      "name": "plain-endpoint",
+      "checkType": "ENDPOINT",
+      "source": "http://localhost:3000/plainEndpoint",
+      "payload": {
+        "type": "PLAIN",
+        "expects": "OK"
+      },
+      "rescue-exec": [],
+      "notify": {
+        "on-error": true,
+        "on-rescued": true
+      }
+    }
+  ]
+}
